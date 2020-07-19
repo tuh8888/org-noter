@@ -149,6 +149,11 @@ when creating a session, if the document is missing."
   :group 'org-noter
   :type 'boolean)
 
+(defcustom org-noter-insert-selected-text-inside-note-function #'identity
+  "A function which modifies the selected text before inserting it into an existing note. Takes the selected text as an argument."
+  :group 'org-noter
+  :type 'function)
+
 (defcustom org-noter-closest-tipping-point 0.3
   "Defines when to show the closest previous note.
 
@@ -1840,7 +1845,7 @@ defines if the text should be inserted inside the note."
                    (unless (bolp) (insert "\n"))
                    (org-N-empty-lines-before-current (1- empty-lines-number)))
 
-                 (when (and org-noter-insert-selected-text-inside-note selected-text) (insert selected-text)))
+                 (when (and org-noter-insert-selected-text-inside-note selected-text) (insert (funcall org-noter-insert-selected-text-inside-note-function selected-text))))
 
              ;; NOTE(nox): Inserting a new note
              (let ((reference-element-cons (org-noter--view-info-reference-for-insertion view-info))
